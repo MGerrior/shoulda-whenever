@@ -1,4 +1,4 @@
-require "shoulda/whenever/schedule_rake_matcher"
+require "shoulda/whenever/schedule_matcher"
 
 module Shoulda
   module Whenever
