@@ -9,11 +9,7 @@ module Shoulda
     alias_method :schedule_command, :schedule
 
     class ScheduleMatcher
-      attr_reader :duration,
-                  :time,
-                  :task,
-                  :failure_message,
-                  :failure_message_when_negated
+      attr_reader :duration, :time, :task
 
       def initialize(task)
         @task = task
@@ -24,18 +20,30 @@ module Shoulda
       def matches?(subject)
         jobs = subject.instance_variable_get("@jobs")
 
-        if duration.nil?
-          jobs.any? do |time, scheduled_jobs|
-            scheduled_jobs.any? do |job|
-              job.instance_variable_get("@options")[:task] == task
-            end
-          end
-        else
-          scheduled_jobs = jobs.fetch(duration, [])
+        jobs = filter_jobs_by_duration(jobs)
+        jobs = filter_jobs_by_time(jobs)
+        jobs = filter_jobs_by_task(jobs)
 
-          scheduled_jobs.any? do |job|
-            job.instance_variable_get("@options")[:task] == task
-          end
+        jobs.any?
+      end
+
+      def filter_jobs_by_duration(jobs)
+        if duration.nil?
+          jobs.values.flatten
+        else
+          jobs[duration]
+        end
+      end
+
+      def filter_jobs_by_time(jobs)
+        return jobs if time.nil?
+
+        jobs.select { |job| job.at == time }
+      end
+
+      def filter_jobs_by_task(jobs)
+        jobs.select do |job|
+          job.instance_variable_get("@options")[:task] == task
         end
       end
 
@@ -55,6 +63,14 @@ module Shoulda
         [base_description, duration_description, time_description].compact.join(' ')
       end
 
+      def failure_message
+        [base_failure_message, duration_description, time_description].compact.join(' ')
+      end
+
+      def failure_message_when_negated
+        [base_failure_message_when_negated, duration_description, time_description].compact.join(' ')
+      end
+
       private
 
       def base_description
@@ -62,19 +78,27 @@ module Shoulda
       end
 
       def duration_description
-        unless @duration.nil?
-          if @duration.is_a?(String)
-            "every \"#{ @duration }\""
+        unless duration.nil?
+          if duration.is_a?(String)
+            "every \"#{ duration }\""
           else
-            "every #{ @duration.to_i } seconds"
+            "every #{ duration.to_i } seconds"
           end
         end
       end
 
       def time_description
-        unless @time.nil?
-          "at \"#{ @time }\""
+        unless time.nil?
+          "at \"#{ time }\""
         end
+      end
+
+      def base_failure_message
+        "expected to schedule \"#{ task }\""
+      end
+
+      def base_failure_message_when_negated
+        "expected not to schedule \"#{ task }\""
       end
     end
   end

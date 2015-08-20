@@ -71,7 +71,7 @@ describe Shoulda::Whenever::ScheduleMatcher do
     it "fails" do
       expect {
         expect(whenever).to schedule("MyTask.run")
-      }.to fail_with("expected not to schedule \"rake:every:3:hours\"")
+      }.to fail_with("expected to schedule \"MyTask.run\"")
     end
   end
 
@@ -95,8 +95,7 @@ describe Shoulda::Whenever::ScheduleMatcher do
     end
   end
 
-=begin
-  context "a job that is scheduled to run" do
+  context "a task that is scheduled after a certain duration" do
     let(:schedule_string) do
       <<-SCHEDULE
         every 3.hours do
@@ -105,83 +104,33 @@ describe Shoulda::Whenever::ScheduleMatcher do
       SCHEDULE
     end
 
-    it "is scheduled to run the task" do
-      expect(whenever).to schedule_rake("rake:every:3:hours")
+    it "passes" do
+      expect(whenever).to schedule("rake:every:3:hours").every(Whenever::NumericSeconds.seconds(3, "hours"))
     end
+     it "fails" do
+       expect {
+         expect(whenever).not_to schedule("rake:every:3:hours").every(Whenever::NumericSeconds.seconds(3, "hours"))
+       }.to fail_with("expected not to schedule \"rake:every:3:hours\" every 10800 seconds")
+     end
   end
 
-  context "a job that is supposed to be scheduled" do
-    let(:schedule_string) { "" }
-
-    it "is not scheduled to run" do
-      expect {
-        expect(whenever).to schedule_rake("rake:every:3:hours")
-      }.to fail_with("expected to schedule 'rake rake:every:3:hours' but did not")
-    end
-  end
-
-  context "a job that is not scheduled to run" do
-    let(:schedule_string) { "" }
-
-    it "is not scheduled to run" do
-      expect(whenever).not_to schedule_rake("rake:every:3:hours")
-    end
-  end
-
-  context "a job that is not supposed to be scheduled" do
+  context "a task that is scheduled to run at a certain time" do
     let(:schedule_string) do
       <<-SCHEDULE
-        every 3.hours do
-          rake "rake:every:3:hours"
+        every 1.day, at: "12:00 PM" do
+          rake "rake:every:day:at:noon"
         end
       SCHEDULE
     end
 
-    it "is scheduled to run" do
+    it "passes" do
+      expect(whenever).to schedule("rake:every:day:at:noon").every(Whenever::NumericSeconds.seconds(1, "day")).at("12:00 PM")
+    end
+
+    it "fails" do
       expect {
-        expect(whenever).not_to schedule_rake("rake:every:3:hours")
-      }.to fail_with("expected not to schedule 'rake rake:every:3:hours' but did")
+        expect(whenever).not_to schedule("rake:every:day:at:noon").every(Whenever::NumericSeconds.seconds(1, "day")).at("12:00 PM")
+      }.to fail_with("expected not to schedule \"rake:every:day:at:noon\" every 86400 seconds at \"12:00 PM\"")
     end
   end
-
-  context "a job that is scheduled to run after a certain duration" do
-    let(:schedule_string) do
-      <<-SCHEDULE
-        every 15.minutes do
-          rake "rake:every:15:minutes"
-        end
-      SCHEDULE
-    end
-
-    it "is scheduled to run" do
-      expect(whenever).to schedule_rake("rake:every:15:minutes").every(900)
-    end
-
-    it "fails with an error message" do
-      expect {
-        expect(whenever).to schedule_rake("rake:every:15:minutes").every(300)
-      }.to fail_with("expected to schedule 'rake rake:every:15:minutes' every 300 seconds but did not")
-    end
-  end
-
-  context "a job that is not scheduled to run after a certain duration" do
-    let(:schedule_string) do
-      <<-SCHEDULE
-        every 10.minutes do
-          rake "rake:every:10:minutes"
-        end
-      SCHEDULE
-    end
-
-    it "is not scheduled to run" do
-      expect(whenever).not_to schedule_rake("rake:every:10:minutes").every(900)
-    end
-
-    it "fails with an error message" do
-      expect {
-        expect(whenever).not_to schedule_rake("rake:every:10:minutes").every(600)
-      }.to fail_with("expected not to schedule 'rake rake:every:10:minutes' but it was scheduled")
-    end
-  end
-=end
 end
