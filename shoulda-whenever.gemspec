@@ -15,4 +15,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.required_ruby_version = '>= 1.9.3'
+
+  s.add_development_dependency "rspec", "~> 3.3.0"
+  s.add_development_dependency "whenever", "~> 0.9.4"
 end
