@@ -33,7 +33,13 @@ module Shoulda
         if duration.nil?
           jobs.values.flatten
         else
-          jobs[duration]
+          duration_to_fetch = if duration.is_a?(String) || duration.is_a?(Symbol)
+                                duration
+                              else
+                                duration.to_i
+                              end
+
+          jobs.fetch(duration_to_fetch) { [] }
         end
       end
 
