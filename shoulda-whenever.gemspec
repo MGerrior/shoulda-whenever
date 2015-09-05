@@ -7,9 +7,10 @@ Gem::Specification.new do |s|
   s.authors     = ["Matthew Gerrior"]
   s.date        = Time.now.strftime("%Y-%m-%d")
   s.email       = "gerrior.matthew@gmail.com"
+  s.homepage    = "http://rubygems.org/gems/shoulda-whenever"
   s.summary     = "Shoulda style matchers for whenever gem"
   s.license     = "MIT"
-  s.description = "Shoulda style matchers for whenever gem"
+  s.description = "This gem is designed to make it easier to test that the schedule you built with the 'whenever' gem is accurate."
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -17,6 +18,6 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_development_dependency "rspec", "~> 3.3.0"
+  s.add_development_dependency "rspec", "~> 3.3", ">= 3.3.0"
   s.add_development_dependency "whenever", "~> 0.9.4"
 end
