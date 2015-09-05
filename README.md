@@ -7,7 +7,7 @@ This gem was born out of a desire to test the schedule for tasks being scheduled
 Add this to you gemfile:
 
 ```ruby
-gem "shoulda-whenever", "~> 0.0.1", "https://github.com/MGerrior/shoulda-whenever.git"
+gem "shoulda-whenever", "~> 0.0.1"
 ```
 
 Create a new schedule to be tested at `config/schedule.rb` (or anywhere really, but for the sake of the README, that's where it is):
@@ -23,9 +23,9 @@ Create a new test file for testing your schedule, perhaps something like `spec/s
 ```ruby
 describe "Schedule" do
   include Shoulda::Whenever
-  
+
   let(:whenever) { Whenever::JobList.new(file: File.join(Rails.root, "config", "schedule.rb").to_s) }
-  
+
   it "sends out the team lunch reminder email every friday at noon" do
     expect(whenever).to schedule("Notifier.send_team_lunch_email").every(:friday).at("12:00 PM")
   end
