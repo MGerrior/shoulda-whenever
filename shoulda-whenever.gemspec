@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_development_dependency "rspec", "~> 3.3", ">= 3.3.0"
+  s.add_development_dependency "rspec", "~> 3.4", ">= 3.4.0"
   s.add_development_dependency "whenever", "~> 0.9.4"
 end

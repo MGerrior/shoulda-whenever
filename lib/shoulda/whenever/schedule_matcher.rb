@@ -12,10 +12,10 @@ module Shoulda
       attr_reader :duration, :time, :task, :roles
 
       def initialize(task)
-        @task = task
+        @task     = task
         @duration = nil
-        @time = nil
-        @roles = nil
+        @time     = nil
+        @roles    = nil
       end
 
       def matches?(subject)
