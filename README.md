@@ -7,7 +7,7 @@ This gem was born out of a desire to test the schedule for tasks being scheduled
 Add this to you gemfile:
 
 ```ruby
-gem "shoulda-whenever", "~> 0.0.1"
+gem "shoulda-whenever", "~> 0.0.2"
 ```
 
 Create a new schedule to be tested at `config/schedule.rb` (or anywhere really, but for the sake of the README, that's where it is):
