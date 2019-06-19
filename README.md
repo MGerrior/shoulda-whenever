@@ -7,7 +7,7 @@ This gem was born out of a desire to test the schedule for tasks being scheduled
 Add this to you gemfile:
 
 ```ruby
-gem "shoulda-whenever", "~> 0.0.2"
+gem "shoulda-whenever", git: 'git@github.com:epigenesys/shoulda-whenever.git'
 ```
 
 Create a new schedule to be tested at `config/schedule.rb` (or anywhere really, but for the sake of the README, that's where it is):
@@ -29,5 +29,39 @@ describe "Schedule" do
   it "sends out the team lunch reminder email every friday at noon" do
     expect(whenever).to schedule("Notifier.send_team_lunch_email").every(:friday).at("12:00 PM")
   end
+end
+```
+
+## Additional Filters
+
+### Mail To
+
+If you need to check the task output is sent to a specific email address.
+
+```ruby
+every :monday, at: "07:00 AM", mailto: "info@test.com" do
+  runner "Notifier.send_good_morning_email"
+end
+```
+
+```ruby
+it "sends out good morning emails every monday at 7:00" do
+  expect(whenever).to schedule("Notifier.send_good_morning_email").every(:monday).at("07:00 AM").with_mailto("info@test.com")
+end
+```
+
+### Roles
+
+If you need to check the task is set for specific roles.
+
+```ruby
+every :monday, at: "07:00 AM", roles: [:web] do
+  runner "Notifier.send_good_morning_email"
+end
+```
+
+```ruby
+it "sends out good morning emails every monday at 7:00 on web servers" do
+  expect(whenever).to schedule("Notifier.send_good_morning_email").every(:monday).at("07:00 AM").with_roles([:web])
 end
 ```

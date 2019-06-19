@@ -2,6 +2,7 @@ require "spec_helper"
 require "whenever"
 require "shoulda/whenever/schedule_matcher"
 require "rspec/matchers/fail_matchers"
+require "active_support/duration"
 
 describe Shoulda::Whenever::ScheduleMatcher do
   include Shoulda::Whenever
@@ -13,6 +14,17 @@ describe Shoulda::Whenever::ScheduleMatcher do
     context "basic schedule check" do
       it "includes the task being scheduled" do
         expect(described_class.new("rake:every:10:minutes").description).to eq("schedule \"rake:every:10:minutes\"")
+      end
+    end
+
+    context "with a mailto" do
+      it "includes the mailto under which the task is being scheduled" do
+        expect(
+          described_class.new("rake:every:10:minutes")
+            .every(Whenever::NumericSeconds.seconds(10, "minutes"))
+            .with_mailto('test@info.com')
+            .description
+        ).to eq("schedule \"rake:every:10:minutes\" with_mailto \"test@info.com\" every 600 seconds")
       end
     end
 
@@ -105,6 +117,25 @@ describe Shoulda::Whenever::ScheduleMatcher do
         expect(whenever).not_to schedule("rake:every:3:hours")
       }.to fail_with("expected not to schedule \"rake:every:3:hours\"")
     end
+  end
+
+  context "a task that is scheduled with a certain mailto" do
+    let(:schedule_string) do
+      <<-SCHEDULE
+        every 3.hours, mailto: 'test@info.com' do
+          rake "rake:every:3:hours"
+        end
+      SCHEDULE
+    end
+
+    it "passes" do
+      expect(whenever).to schedule("rake:every:3:hours").every(Whenever::NumericSeconds.seconds(3, "hours")).with_mailto('test@info.com')
+    end
+     it "fails" do
+       expect {
+         expect(whenever).not_to schedule("rake:every:3:hours").every(Whenever::NumericSeconds.seconds(3, "hours")).with_mailto('test@info.com')
+       }.to fail_with("expected not to schedule \"rake:every:3:hours\" with_mailto \"test@info.com\" every 10800 seconds")
+     end
   end
 
   context "a task that is scheduled after a certain duration" do
