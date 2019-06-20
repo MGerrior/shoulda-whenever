@@ -4,9 +4,9 @@ require 'shoulda/whenever/version'
 Gem::Specification.new do |s|
   s.name        = "shoulda-whenever"
   s.version     = Shoulda::Whenever::VERSION.dup
-  s.authors     = ["Claudiu Tarta", "Chris Hunt"]
+  s.authors     = ["Matthew Gerrior"]
   s.date        = Time.now.strftime("%Y-%m-%d")
-  s.email       = "claudiu.tarta@epigenesys.org.uk"
+  s.email       = "gerrior.matthew@gmail.com"
   s.homepage    = "http://rubygems.org/gems/shoulda-whenever"
   s.summary     = "Shoulda style matchers for whenever gem"
   s.license     = "MIT"
