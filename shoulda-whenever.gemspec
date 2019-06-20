@@ -16,8 +16,9 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 2.3.8'
 
-  s.add_development_dependency "rspec", "~> 3.4", ">= 3.4.0"
-  s.add_development_dependency "whenever", "~> 0.9.4"
+  s.add_development_dependency "rspec", "~> 3.7"
+  s.add_development_dependency "whenever", "~> 0.10"
+  s.add_development_dependency "activesupport", "~> 5.2"
 end

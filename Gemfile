@@ -1,4 +1,5 @@
 source "https://rubygems.org"
 
-gem "rspec", "~> 3.4.0"
-gem "whenever", "~> 0.9.4"
+gem "rspec", "~> 3.7"
+gem "whenever", "~> 0.10"
+gem "activesupport", "~> 5.2"
